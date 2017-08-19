@@ -100,7 +100,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            Step  step =mValues.get(position);
+            final Step  step =mValues.get(position);
             holder.mItem = step ;
             if(step!=null) {
                 holder.mIdView.setText(String.valueOf(step.getId()));
@@ -112,7 +112,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(RecipeStepDetailFragment.ARG_ITEM_ID, String.valueOf(holder.mItem.getId()));
+                        arguments.putParcelable(RecipeStepDetailFragment.ITEM_EXTRA, step);
                         RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -121,8 +121,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                        intent.putExtra(RecipeStepDetailFragment.ARG_ITEM_ID, String.valueOf(holder.mItem.getId()));
-
+                        intent.putExtra(RecipeStepDetailFragment.ITEM_EXTRA, step);
                         context.startActivity(intent);
                     }
                 }
