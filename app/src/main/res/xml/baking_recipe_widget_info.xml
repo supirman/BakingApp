@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.example.android.firman.bakingapp.BakingRecipeWidgetConfigureActivity"
+    android:initialKeyguardLayout="@layout/baking_recipe_widget"
+    android:initialLayout="@layout/baking_recipe_widget"
+    android:minHeight="80dp"
+    android:minWidth="120dp"
+    android:previewImage="@drawable/ic_cake_blue_24dp"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="86400000"
+    android:widgetCategory="home_screen"></appwidget-provider>
