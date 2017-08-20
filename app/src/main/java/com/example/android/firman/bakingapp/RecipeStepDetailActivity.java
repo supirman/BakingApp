@@ -1,15 +1,15 @@
 package com.example.android.firman.bakingapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.example.android.firman.bakingapp.model.Step;
 
 /**
  * An activity representing a single RecipeStep detail screen. This
@@ -54,8 +54,10 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
+            Step step = getIntent().getParcelableExtra(RecipeStepDetailFragment.ITEM_EXTRA);
             arguments.putParcelable(RecipeStepDetailFragment.ITEM_EXTRA,
-                    getIntent().getParcelableExtra(RecipeStepDetailFragment.ITEM_EXTRA));
+                    step);
+            toolbar.setTitle(step.getShortDescription());
             RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -77,7 +79,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpTo(this, new Intent(this, RecipeStepListActivity.class));
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

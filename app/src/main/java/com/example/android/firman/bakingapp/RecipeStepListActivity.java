@@ -37,6 +37,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
     private boolean mTwoPane;
 
     private Recipe mRecipe;
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +57,15 @@ public class RecipeStepListActivity extends AppCompatActivity {
             }
         });
 
-        View recyclerView = findViewById(R.id.recipestep_list);
-        assert recyclerView != null;
+        mRecyclerView =(RecyclerView) findViewById(R.id.recipestep_list);
+        assert mRecyclerView != null;
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null && intentThatStartedThisActivity.hasExtra(DETAIL_RECIPE)){
             mRecipe = intentThatStartedThisActivity.getExtras().getParcelable(DETAIL_RECIPE);
             setTitle(mRecipe.getName());
         }
-        setupRecyclerView((RecyclerView) recyclerView);
+        setupRecyclerView(mRecyclerView);
 
         if (findViewById(R.id.recipestep_detail_container) != null) {
             // The detail container view will be present only in the
@@ -75,19 +76,32 @@ public class RecipeStepListActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(DETAIL_RECIPE, mRecipe);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mRecipe= savedInstanceState.getParcelable(DETAIL_RECIPE);
+        setupRecyclerView(mRecyclerView);
+    }
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         if(mRecipe!=null) {
-            recyclerView.setAdapter(new RecipeSteamItemRecyclerViewAdapter(mRecipe.getSteps()));
+            recyclerView.setAdapter(new RecipeStepItemRecyclerViewAdapter(mRecipe.getSteps()));
 
         }
     }
 
-    public class RecipeSteamItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<RecipeSteamItemRecyclerViewAdapter.ViewHolder> {
+    public class RecipeStepItemRecyclerViewAdapter
+            extends RecyclerView.Adapter<RecipeStepItemRecyclerViewAdapter.ViewHolder> {
 
         private final List<Step> mValues;
 
-        public RecipeSteamItemRecyclerViewAdapter(List<Step> items) {
+        public RecipeStepItemRecyclerViewAdapter(List<Step> items) {
             mValues = items;
         }
 
