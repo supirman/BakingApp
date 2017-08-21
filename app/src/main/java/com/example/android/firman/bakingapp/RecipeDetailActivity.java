@@ -21,6 +21,7 @@ import com.example.android.firman.bakingapp.model.Ingredient;
 import com.example.android.firman.bakingapp.model.Recipe;
 import com.example.android.firman.bakingapp.model.Step;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -136,7 +137,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 holder.mContentView.setBackgroundColor(ContextCompat.getColor(holder.mView.getContext(),android.R.color.darker_gray));
                 holder.mContentView.setTextColor(ContextCompat.getColor(holder.mView.getContext(),android.R.color.white));
             } else {
-                final Step step = mValues.get(position-1);
+                final int real_index = position-1;
+                final Step step = mValues.get(real_index);
                 //holder.mItem = step ;
                 if (step != null) {
                     holder.mContentView.setText(step.getShortDescription());
@@ -146,7 +148,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (mTwoPane) {
                             Bundle arguments = new Bundle();
-                            arguments.putParcelable(RecipeStepDetailFragment.ITEM_EXTRA, step);
+                            arguments.putParcelableArrayList(RecipeStepDetailFragment.ITEMS_EXTRA, (ArrayList<Step>) mValues);
+                            arguments.putInt(RecipeStepDetailFragment.ITEM_NUMBER_EXTRA, real_index);
                             RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
                             fragment.setArguments(arguments);
                             getSupportFragmentManager().beginTransaction()
@@ -155,7 +158,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                         } else {
                             Context context = v.getContext();
                             Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                            intent.putExtra(RecipeStepDetailFragment.ITEM_EXTRA, step);
+                            intent.putParcelableArrayListExtra(RecipeStepDetailFragment.ITEMS_EXTRA, (ArrayList<Step>) mValues);
+                            intent.putExtra(RecipeStepDetailFragment.ITEM_NUMBER_EXTRA, real_index);
                             context.startActivity(intent);
                         }
                     }

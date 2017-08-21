@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.firman.bakingapp.model.Step;
@@ -23,6 +25,9 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 /**
  * A fragment representing a single RecipeStep detail screen.
@@ -35,17 +40,19 @@ public class RecipeStepDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ITEM_EXTRA = "item_extra";
+    public static final String ITEMS_EXTRA = "items_extra";
+    public static final String ITEM_NUMBER_EXTRA = "item_index";
 
     /**
      * The dummy content this fragment is presenting.
      */
-    private Step mItem;
+    private List<Step> mItems;
     SimpleExoPlayerView playerView;
     private SimpleExoPlayer player;
     private boolean playWhenReady;
     private int currentWindow;
     private long playbackPosition;
+    private int mIndex;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,18 +65,28 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ITEM_EXTRA)) {
+        if (getArguments().containsKey(ITEMS_EXTRA)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             //TODO
-            mItem = getArguments().getParcelable(ITEM_EXTRA);
-
+            mItems = getArguments().getParcelableArrayList(ITEMS_EXTRA);
+            mIndex = getArguments().getInt(ITEM_NUMBER_EXTRA, -1);
 
             Activity activity = this.getActivity();
             playerView = activity.findViewById(R.id.video_view);
-            //CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            //setTitle(mItem.getShortDescription());
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+            Step step=mItems.get(mIndex);
+            if (appBarLayout != null) {
+                appBarLayout.setTitle(step.getShortDescription());
+                if(!TextUtils.isEmpty(step.getThumbnailURL())) {
+                    ImageView imageView = activity.findViewById(R.id.iv_thumbnail_details);
+                    if(imageView!=null)
+                        Picasso.with(getContext())
+                                .load(step.getThumbnailURL())
+                                .into(imageView);
+                }
+            }
 
         }
     }
@@ -84,7 +101,7 @@ public class RecipeStepDetailFragment extends Fragment {
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
 
-        Uri uri = Uri.parse(mItem.getVideoURL());
+        Uri uri = Uri.parse(mItems.get(mIndex).getVideoURL());
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource, true, false);
     }
@@ -111,8 +128,8 @@ public class RecipeStepDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recipestep_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(mItem.getDescription());
+        if (mItems != null) {
+            ((TextView) rootView.findViewById(R.id.recipestep_detail)).setText(mItems.get(mIndex).getDescription());
         }
         playerView = rootView.findViewById(R.id.video_view);
         return rootView;
@@ -121,7 +138,7 @@ public class RecipeStepDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23 && mItem != null && !TextUtils.isEmpty(mItem.getVideoURL())) {
+        if (Util.SDK_INT > 23 && mItems != null && !TextUtils.isEmpty(mItems.get(mIndex).getVideoURL())) {
             initializePlayer();
         }
     }
@@ -130,7 +147,7 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //hideSystemUi();
-        if ((Util.SDK_INT <= 23 || player == null  && mItem != null && !TextUtils.isEmpty(mItem.getVideoURL()))) {
+        if ((Util.SDK_INT <= 23 || player == null  && mItems != null && !TextUtils.isEmpty(mItems.get(mIndex).getVideoURL()))) {
             initializePlayer();
         }
     }

@@ -9,8 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.android.firman.bakingapp.model.Step;
-
 /**
  * An activity representing a single RecipeStep detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
@@ -26,7 +24,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_next);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,10 +52,11 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            Step step = getIntent().getParcelableExtra(RecipeStepDetailFragment.ITEM_EXTRA);
-            arguments.putParcelable(RecipeStepDetailFragment.ITEM_EXTRA,
-                    step);
-            toolbar.setTitle(step.getShortDescription());
+            arguments.putParcelableArrayList(RecipeStepDetailFragment.ITEMS_EXTRA,
+                    getIntent().getParcelableArrayListExtra(RecipeStepDetailFragment.ITEMS_EXTRA));
+            arguments.putInt(RecipeStepDetailFragment.ITEM_NUMBER_EXTRA,
+                    getIntent().getIntExtra(RecipeStepDetailFragment.ITEM_NUMBER_EXTRA,0));
+            //toolbar.setTitle(step.getShortDescription());
             RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
