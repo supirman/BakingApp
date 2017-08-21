@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.example.android.firman.bakingapp.RecipeStepListActivity"
+    tools:context="com.example.android.firman.bakingapp.RecipeDetailActivity"
     tools:listitem="@layout/recipestep_list_content" />

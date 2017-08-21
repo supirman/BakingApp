@@ -26,7 +26,7 @@ import com.google.android.exoplayer2.util.Util;
 
 /**
  * A fragment representing a single RecipeStep detail screen.
- * This fragment is either contained in a {@link RecipeStepListActivity}
+ * This fragment is either contained in a {@link RecipeDetailActivity}
  * in two-pane mode (on tablets) or a {@link RecipeStepDetailActivity}
  * on handsets.
  */

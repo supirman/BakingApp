@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements RecipeRecycleAdap
 
     @Override
     public void onCLick(Recipe recipe) {
-        Intent intent = new Intent(getBaseContext(), RecipeStepListActivity.class);
-        intent.putExtra(RecipeStepListActivity.DETAIL_RECIPE, recipe);
+        Intent intent = new Intent(getBaseContext(), RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailActivity.DETAIL_RECIPE, recipe);
         startActivity(intent);
     }
 }
