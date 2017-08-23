@@ -65,7 +65,7 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ITEMS_EXTRA)) {
+        if (getArguments().containsKey(ITEMS_EXTRA) && getArguments().containsKey(ITEM_NUMBER_EXTRA)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
@@ -139,7 +139,11 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (Util.SDK_INT > 23 && mItems != null && !TextUtils.isEmpty(mItems.get(mIndex).getVideoURL())) {
+            playerView.setVisibility(View.VISIBLE);
             initializePlayer();
+        }
+        if (mItems == null || TextUtils.isEmpty(mItems.get(mIndex).getVideoURL())){
+            playerView.setVisibility(View.GONE);
         }
     }
 
@@ -148,7 +152,11 @@ public class RecipeStepDetailFragment extends Fragment {
         super.onResume();
         //hideSystemUi();
         if ((Util.SDK_INT <= 23 || player == null  && mItems != null && !TextUtils.isEmpty(mItems.get(mIndex).getVideoURL()))) {
+            playerView.setVisibility(View.VISIBLE);
             initializePlayer();
+        }
+        if (mItems == null || TextUtils.isEmpty(mItems.get(mIndex).getVideoURL())){
+            playerView.setVisibility(View.GONE);
         }
     }
 

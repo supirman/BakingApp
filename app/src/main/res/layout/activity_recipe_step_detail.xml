@@ -29,7 +29,6 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_toolbar"
                 android:layout_width="match_parent"
@@ -55,7 +54,8 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/recipestep_detail_container"
         app:srcCompat="@drawable/ic_navigate_next_white_24dp"
-        app:layout_anchorGravity="bottom|end" />
+        app:layout_anchorGravity="bottom|end"
+        android:alpha="0.5"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_before"
@@ -65,6 +65,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/recipestep_detail_container"
         app:srcCompat="@drawable/ic_navigate_before_white_24dp"
-        app:layout_anchorGravity="bottom|start" />
+        app:layout_anchorGravity="bottom|start"
+        android:alpha="0.5"/>
 
 </android.support.design.widget.CoordinatorLayout>

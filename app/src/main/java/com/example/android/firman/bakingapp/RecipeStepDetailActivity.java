@@ -2,12 +2,16 @@ package com.example.android.firman.bakingapp;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.example.android.firman.bakingapp.model.Step;
+
+import java.util.ArrayList;
 
 /**
  * An activity representing a single RecipeStep detail screen. This
@@ -17,6 +21,11 @@ import android.view.View;
  */
 public class RecipeStepDetailActivity extends AppCompatActivity {
 
+    ArrayList<Step> mSteps;
+    int mActiveStepIndex;
+    FloatingActionButton fab_next, fab_before;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,15 +33,28 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_next);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab_next = (FloatingActionButton) findViewById(R.id.fab_next);
+        fab_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                int next_index = mActiveStepIndex+1;
+                if(next_index<mSteps.size()){
+                    updateFragment(mSteps, next_index, false);
+                }
             }
         });
-
+        fab_before = (FloatingActionButton) findViewById(R.id.fab_before);
+        fab_before.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int next_index = mActiveStepIndex-1;
+                if(next_index>=0){
+                    updateFragment(mSteps, next_index, false);
+                }
+            }
+        });
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -51,20 +73,38 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putParcelableArrayList(RecipeStepDetailFragment.ITEMS_EXTRA,
-                    getIntent().getParcelableArrayListExtra(RecipeStepDetailFragment.ITEMS_EXTRA));
-            arguments.putInt(RecipeStepDetailFragment.ITEM_NUMBER_EXTRA,
-                    getIntent().getIntExtra(RecipeStepDetailFragment.ITEM_NUMBER_EXTRA,0));
-            //toolbar.setTitle(step.getShortDescription());
-            RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.recipestep_detail_container, fragment)
-                    .commit();
+            mSteps = getIntent().getParcelableArrayListExtra(RecipeStepDetailFragment.ITEMS_EXTRA);
+            mActiveStepIndex=getIntent().getIntExtra(RecipeStepDetailFragment.ITEM_NUMBER_EXTRA, 0);
+            updateFragment(mSteps, mActiveStepIndex, true);
+        }
+    }
+
+    private void updateFragment(ArrayList<Step> steps, int index, boolean isNew){
+        Bundle arguments = new Bundle();
+        arguments.putParcelableArrayList(RecipeStepDetailFragment.ITEMS_EXTRA, steps);
+        arguments.putInt(RecipeStepDetailFragment.ITEM_NUMBER_EXTRA, index);
+        RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
+        fragment.setArguments(arguments);
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(isNew) {
+            ft.add(R.id.recipestep_detail_container, fragment);
+        } else {
+            ft.replace(R.id.recipestep_detail_container,fragment);
+        }
+        ft.commit();
+        mActiveStepIndex = index;
+
+        if(index<=0) fab_before.hide();
+        else {
+            fab_before.show();
+            fab_before.setAlpha(0.5f);
         }
 
-
+        if(index>=steps.size()-1) fab_next.hide();
+        else {
+            fab_next.show();
+            fab_next.setAlpha(0.5f);
+        }
     }
 
     @Override
