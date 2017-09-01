@@ -151,7 +151,7 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //hideSystemUi();
-        if ((Util.SDK_INT <= 23 || player == null  && mItems != null && !TextUtils.isEmpty(mItems.get(mIndex).getVideoURL()))) {
+        if ((Util.SDK_INT <= 23 || player == null ) && mItems != null && !TextUtils.isEmpty(mItems.get(mIndex).getVideoURL())) {
             playerView.setVisibility(View.VISIBLE);
             initializePlayer();
         }
